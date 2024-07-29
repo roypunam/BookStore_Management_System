@@ -1,0 +1,11 @@
+com.bookstore.management.bookstore_management
+com.bookstore.management.bookstore_management.config.swagger
+com.bookstore.management.bookstore_management.controller
+com.bookstore.management.bookstore_management.dto
+com.bookstore.management.bookstore_management.entity
+com.bookstore.management.bookstore_management.exception
+com.bookstore.management.bookstore_management.repository
+com.bookstore.management.bookstore_management.service
+com.bookstore.management.bookstore_management.service.impl
+com.bookstore.management.bookstore_management.utils
+com.student.management.student_info
