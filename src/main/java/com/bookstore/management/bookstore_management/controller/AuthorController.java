@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.management.bookstore_management.dto.AuthorDto;
 import com.bookstore.management.bookstore_management.dto.DeleteResponse;
-import com.bookstore.management.bookstore_management.exception.AuthorExistException;
 import com.bookstore.management.bookstore_management.service.AuthorService;
 
 import jakarta.validation.Valid;
@@ -33,7 +32,7 @@ public class AuthorController {
 	private AuthorService authorService;
 
 	@PostMapping("/create")
-	public ResponseEntity<AuthorDto> createAuthor(@RequestBody @Valid AuthorDto authorDto) throws AuthorExistException {
+	public ResponseEntity<AuthorDto> createAuthor(@RequestBody @Valid AuthorDto authorDto) {
 		log.info("createAuthor API called.");
 
 		AuthorDto registeredAuthor = authorService.createAuthor(authorDto);

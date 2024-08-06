@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.management.bookstore_management.dto.BookDto;
 import com.bookstore.management.bookstore_management.dto.DeleteResponse;
-import com.bookstore.management.bookstore_management.exception.BookExistException;
+import com.bookstore.management.bookstore_management.exception.RunTimeException;
 import com.bookstore.management.bookstore_management.service.BookService;
 
 import jakarta.validation.Valid;
@@ -33,10 +34,9 @@ public class BookController {
 	private BookService bookService;
 
 	@PostMapping("/create/new")
-	public ResponseEntity<BookDto> createNewBook(@RequestBody @Valid BookDto bookDto) throws BookExistException {
+	public ResponseEntity<BookDto> createNewBook(@RequestBody @Valid BookDto bookDto,@RequestParam Long authorId) throws RunTimeException {
 		log.info("createNewBook API called.");
-
-		BookDto registeredBook = bookService.createNewBook(bookDto);
+		BookDto registeredBook = bookService.createNewBook(bookDto,authorId);
 		return new ResponseEntity<BookDto>(registeredBook, HttpStatus.CREATED);
 	}
 
@@ -68,9 +68,10 @@ public class BookController {
 		DeleteResponse deleteResponse = bookService.deleteBook(id);
 		return new ResponseEntity<DeleteResponse>(deleteResponse, HttpStatus.OK);
 	}
-	
+
 	@PatchMapping("/update/partial/{id}")
-	public ResponseEntity<BookDto> updateBookDetailsPartially(@RequestBody @Valid Map<String, Object> updates, @PathVariable Long id) {
+	public ResponseEntity<BookDto> updateBookDetailsPartially(@RequestBody @Valid Map<String, Object> updates,
+			@PathVariable Long id) {
 		log.info("updateBookDetailsPartially API called.");
 		BookDto updatedBookDetails = bookService.updateBookDetailsPartially(updates, id);
 		return new ResponseEntity<BookDto>(updatedBookDetails, HttpStatus.OK);

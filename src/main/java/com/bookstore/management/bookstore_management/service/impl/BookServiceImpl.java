@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.bookstore.management.bookstore_management.dto.BookDto;
 import com.bookstore.management.bookstore_management.dto.DeleteResponse;
+import com.bookstore.management.bookstore_management.entity.AuthorEntity;
 import com.bookstore.management.bookstore_management.entity.BookEntity;
-import com.bookstore.management.bookstore_management.exception.BookExistException;
 import com.bookstore.management.bookstore_management.exception.BookNotFoundException;
+import com.bookstore.management.bookstore_management.exception.RunTimeException;
+import com.bookstore.management.bookstore_management.repository.AuthorRepository;
 import com.bookstore.management.bookstore_management.repository.BookRepository;
 import com.bookstore.management.bookstore_management.service.BookService;
 
@@ -25,20 +27,18 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private BookRepository bookRepo;
 
-	@Override
-	public BookDto createNewBook(BookDto bookDto) throws BookExistException {
-		log.info("createNewBook service impl called.");
-		// Check book already exists
-		BookEntity oldBook = bookRepo.findById(bookDto.getId()).orElse(null);
-		if (oldBook == null) {
-			// DTO to BookEntity conversion
-			BookEntity book = BookDto.getBook(bookDto);
-			BookEntity savedBook = bookRepo.save(book);
-			return BookEntity.getBookDto(savedBook);
-		} else {
-			throw new BookExistException("Book already exist with this book id: " + oldBook.getBookId());
+	@Autowired
+	private AuthorRepository authorRepo;
 
-		}
+	@Override
+	public BookDto createNewBook(BookDto bookDto, Long authorId) throws RunTimeException {
+		log.info("createNewBook service impl called.");
+		AuthorEntity author = authorRepo.findById(authorId).orElseThrow(() -> new RunTimeException("Author not found"));
+		// DTO to BookEntity conversion
+		BookEntity book = BookDto.getBook(bookDto);
+		book.setAuthor(author);
+		BookEntity savedBook = bookRepo.save(book);
+		return BookEntity.getBookDto(savedBook);
 
 	}
 
@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
 				.orElseThrow(() -> new BookNotFoundException("BookEntity", "bookId", id));
 		book.setTitle(bookDto.getTitle());
 		book.setIsbn(bookDto.getIsbn());
-		
+
 		// Update details saved
 		BookEntity updatedBook = bookRepo.save(book);
 		BookDto response = BookEntity.getBookDto(updatedBook);
@@ -73,7 +73,7 @@ public class BookServiceImpl implements BookService {
 			response.add(dto);
 		}
 		return response;
-		
+
 	}
 
 	@Override
@@ -106,23 +106,23 @@ public class BookServiceImpl implements BookService {
 	public BookDto updateBookDetailsPartially(Map<String, Object> updates, Long id) {
 		Optional<BookEntity> bookOptional = bookRepo.findById(id);
 
-        if (bookOptional.isPresent()) {
-        	BookEntity book = bookOptional.get();
-            updates.forEach((key, value) -> {
-                switch (key) {
-                    case "title":
-                        book.setTitle((String) value);
-                        break;
-                    case "isbn":
-                        book.setIsbn((String) value);
-                        break;
-                    
-                }
-            });
-            BookEntity books= bookRepo.save(book);
-            return BookEntity.getBookDto(books);
-        } else {
-            throw new RuntimeException("Book not found with id " + id);
-        }
+		if (bookOptional.isPresent()) {
+			BookEntity book = bookOptional.get();
+			updates.forEach((key, value) -> {
+				switch (key) {
+				case "title":
+					book.setTitle((String) value);
+					break;
+				case "isbn":
+					book.setIsbn((String) value);
+					break;
+
+				}
+			});
+			BookEntity books = bookRepo.save(book);
+			return BookEntity.getBookDto(books);
+		} else {
+			throw new RuntimeException("Book not found with id " + id);
+		}
 	}
 }

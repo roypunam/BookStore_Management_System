@@ -5,12 +5,11 @@ import java.util.Map;
 
 import com.bookstore.management.bookstore_management.dto.AuthorDto;
 import com.bookstore.management.bookstore_management.dto.DeleteResponse;
-import com.bookstore.management.bookstore_management.exception.AuthorExistException;
 
 public interface AuthorService {
 
 
-	AuthorDto createAuthor(AuthorDto authorDto) throws AuthorExistException;
+	AuthorDto createAuthor(AuthorDto authorDto);
 
 	AuthorDto updateAuthorDetails(AuthorDto authorDto, Long id);
 

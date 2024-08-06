@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthorDto {
 
-	Long id;
 	@NotEmpty(message = "The author name is required.")
 	@Size(min = 2, max = 100, message = "The length of author name must be between 2 and 100 characters.")
 	String authorName;
@@ -27,7 +26,6 @@ public class AuthorDto {
 
 	public static AuthorEntity getAuthor(AuthorDto dto) {
 		AuthorEntity author = new AuthorEntity();
-		author.setAuthorId(dto.getId());
 		author.setAuthorName(dto.getAuthorName());
 		author.setAuthorEmail(dto.getAuthorEmail());
 

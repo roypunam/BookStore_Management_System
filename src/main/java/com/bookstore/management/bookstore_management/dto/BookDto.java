@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookDto {
 
-	Long id;
 	@NotEmpty(message = "The title is required.")
 	@Size(min = 2, max = 100, message = "The length of title must be between 5 and 100 characters.")
 	String title;
@@ -26,7 +25,6 @@ public class BookDto {
 
 	public static BookEntity getBook(BookDto dto) {
 		BookEntity book = new BookEntity();
-		book.setBookId(dto.getId());
 		book.setTitle(dto.getTitle());
 		book.setIsbn(dto.getIsbn());
 		return book;

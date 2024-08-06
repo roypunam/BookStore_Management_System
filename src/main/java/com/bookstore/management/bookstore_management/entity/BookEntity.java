@@ -5,6 +5,8 @@ import com.bookstore.management.bookstore_management.dto.BookDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -29,8 +31,10 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "book")
 public class BookEntity {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "book_id")
 	Long bookId;
+	
 	@Column(name = "book_title")
 	String title;
 	@Column(name = "isbn")
@@ -42,7 +46,6 @@ public class BookEntity {
 
 	public static BookDto getBookDto(BookEntity book) {
 		BookDto dto = new BookDto();
-		dto.setId(book.getBookId());
 		dto.setTitle(book.getTitle());
 		dto.setIsbn(book.getIsbn());
 		return dto;

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.bookstore.management.bookstore_management.dto.AuthorDto;
 import com.bookstore.management.bookstore_management.dto.DeleteResponse;
 import com.bookstore.management.bookstore_management.entity.AuthorEntity;
-import com.bookstore.management.bookstore_management.exception.AuthorExistException;
 import com.bookstore.management.bookstore_management.exception.AuthorNotFoundException;
 import com.bookstore.management.bookstore_management.repository.AuthorRepository;
 import com.bookstore.management.bookstore_management.service.AuthorService;
@@ -26,19 +25,13 @@ public class AuthorServiceImpl implements AuthorService {
 	private AuthorRepository authorRepo;
 
 	@Override
-	public AuthorDto createAuthor(AuthorDto authorDto) throws AuthorExistException {
+	public AuthorDto createAuthor(AuthorDto authorDto)  {
 		log.info("createAuthor service impl called.");
-		// Check author already exists
-		AuthorEntity oldAuthor = authorRepo.findById(authorDto.getId()).orElse(null);
-		if (oldAuthor == null) {
-			// DTO to AuthorEntity conversion
-			AuthorEntity author = AuthorDto.getAuthor(authorDto);
-			AuthorEntity savedAuthor = authorRepo.save(author);
-			return AuthorEntity.getAuthorDto(savedAuthor);
-		} else {
-			throw new AuthorExistException("Author already exist with this author id: " + oldAuthor.getAuthorId());
 
-		}
+		// DTO to AuthorEntity conversion
+		AuthorEntity author = AuthorDto.getAuthor(authorDto);
+		AuthorEntity savedAuthor = authorRepo.save(author);
+		return AuthorEntity.getAuthorDto(savedAuthor);
 
 	}
 
