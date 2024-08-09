@@ -43,7 +43,7 @@ public class AuthorEntity {
 	@Column(name="email_address")
 	String authorEmail;
 	
-	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.ALL,orphanRemoval = true)
 	    private List<BookEntity> bookList;
 	
 	public static AuthorDto getAuthorDto(AuthorEntity author) {

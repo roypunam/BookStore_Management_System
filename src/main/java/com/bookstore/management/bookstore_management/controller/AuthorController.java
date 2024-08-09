@@ -24,14 +24,14 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/author")
+@RequestMapping("/authors")
 @Slf4j
 public class AuthorController {
 
 	@Autowired
 	private AuthorService authorService;
 
-	@PostMapping("/create")
+	@PostMapping("")
 	public ResponseEntity<AuthorDto> createAuthor(@RequestBody @Valid AuthorDto authorDto) {
 		log.info("createAuthor API called.");
 
@@ -39,14 +39,29 @@ public class AuthorController {
 		return new ResponseEntity<AuthorDto>(registeredAuthor, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<AuthorDto> updateAuthorDetails(@RequestBody @Valid AuthorDto authorDto, @PathVariable Long id) {
 		log.info("updateAuthorDetails API called.");
 		AuthorDto updatedDetails = authorService.updateAuthorDetails(authorDto, id);
 		return new ResponseEntity<AuthorDto>(updatedDetails, HttpStatus.OK);
 	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<AuthorDto> updateAuthorDetailsPartially(@RequestBody @Valid Map<String, Object> fields,
+			@PathVariable Long id) {
+		log.info("updateAuthorDetailsPartially API called.");
+		AuthorDto updatedauthorDetails = authorService.updateAuthorDetailsPartially(fields, id);
+		return new ResponseEntity<AuthorDto>(updatedauthorDetails, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<AuthorDto> getAuthor(@PathVariable Long id) {
+		log.info("getAuthor API called.");
+		AuthorDto getAuthor = authorService.getAuthor(id);
+		return new ResponseEntity<AuthorDto>(getAuthor, HttpStatus.OK);
+	}
 
-	@GetMapping("/list/view")
+	@GetMapping("")
 	public ResponseEntity<List<AuthorDto>> getAllAuthor() {
 		log.info("getAllAuthor API called.");
 		List<AuthorDto> getAuthorList = authorService.getAllAuthor();
@@ -54,26 +69,13 @@ public class AuthorController {
 
 	}
 
-	@GetMapping("view/id/{id}")
-	public ResponseEntity<AuthorDto> getAuthor(@PathVariable Long id) {
-		log.info("getAuthor API called.");
-		AuthorDto getAuthor = authorService.getAuthor(id);
-		return new ResponseEntity<AuthorDto>(getAuthor, HttpStatus.OK);
-	}
-
-	@DeleteMapping("/delete/id/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<DeleteResponse> deleteAuthor(@PathVariable Long id) {
 		log.info("deleteAuthor API called.");
 		DeleteResponse deleteResponse = authorService.deleteAuthor(id);
 		return new ResponseEntity<DeleteResponse>(deleteResponse, HttpStatus.OK);
 	}
 
-	@PatchMapping("/update/partial/{id}")
-	public ResponseEntity<AuthorDto> updateAuthorDetailsPartially(@RequestBody @Valid Map<String, Object> updates,
-			@PathVariable Long id) {
-		log.info("updateAuthorDetailsPartially API called.");
-		AuthorDto updatedauthorDetails = authorService.updateAuthorDetailsPartially(updates, id);
-		return new ResponseEntity<AuthorDto>(updatedauthorDetails, HttpStatus.OK);
-	}
+	
 
 }

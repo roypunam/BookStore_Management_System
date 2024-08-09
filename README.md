@@ -11,7 +11,6 @@ For building and running the application you need:
 
 - Java 17
 - Spring Boot 3.3.2
-- Spring Data JPA
 - Maven
 - MySQL database
 
@@ -30,24 +29,24 @@ mvn spring-boot:run
 #### Authors:
 
 ```http
-GET /author/list/view - Retrieve all authors
-GET /author/view/id/{id} - Retrieve an author by ID
-POST /author/create - Create a new author
-PATCH /author/update/partial/{id} - Partially update an existing author
-PUT /author/update/{id} - Update an existing author
-DELETE /author/delete/id/{id} - Delete an author
+GET /authors - Retrieve all authors
+GET /authors/{id} - Retrieve an author by ID
+POST /authors - Create a new author
+PATCH /authors/{id} - Partially update an existing author
+PUT /authors/{id} - Update an existing author
+DELETE /authors/{id} - Delete an author
 ```
 - [REF Author controller](https://github.com/roypunam/BookStore_Management_System/blob/main/src/main/java/com/bookstore/management/bookstore_management/controller/AuthorController.java)
 
 #### Books:
 
 ```http
-GET /book/list/view - Retrieve all books
-GET /book/id/{id} - Retrieve a book by ID
-POST /book/create/new - Create a new book
-PUT /book/update/{id} - Update an existing book
-PATCH /book/update/partial/{id} - Partially update an existing book
-DELETE /book/delete/id/{id} - Delete a book
+GET /books - Retrieve all books
+GET /books/{id} - Retrieve a book by ID
+POST /books - Create a new book
+PUT /books/{id} - Update an existing book
+PATCH /books/{id} - Partially update an existing book
+DELETE /books/{id} - Delete a book
 ```
 - [REF Book controller](https://github.com/roypunam/BookStore_Management_System/blob/main/src/main/java/com/bookstore/management/bookstore_management/controller/BookController.java)
 

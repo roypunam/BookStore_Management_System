@@ -29,6 +29,9 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private AuthorRepository authorRepo;
+	
+	
+	
 
 	@Override
 	public BookDto createNewBook(BookDto bookDto, Long authorId) throws RunTimeException {
@@ -60,6 +63,46 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	public BookDto updateBookDetailsPartially(Map<String, Object> fields, Long id) {
+		log.info("updateBookDetailsPartially service impl called.");
+		
+		//Database called
+		Optional<BookEntity> bookOptional = bookRepo.findById(id);
+
+		if (bookOptional.isPresent()) {
+			BookEntity book = bookOptional.get();
+			fields.forEach((key, value) -> {
+				switch (key) {
+				case "title":
+					book.setTitle((String) value);
+					break;
+				case "isbn":
+					book.setIsbn((String) value);
+					break;
+
+				}
+			});
+			BookEntity books = bookRepo.save(book);
+			return BookEntity.getBookDto(books);
+		} else {
+			throw new RuntimeException("Book not found with id " + id);
+		}
+	}
+
+	@Override
+	public BookDto getBook(Long id) {
+		log.info("getBook service impl called.");
+
+		// Database called
+		BookEntity book = bookRepo.findById(id)
+				.orElseThrow(() -> new BookNotFoundException("BookEntity", "bookId", id));
+
+		// BookEntity to DTO conversion
+		BookDto response = BookEntity.getBookDto(book);
+		return response;
+	}
+
+	@Override
 	public List<BookDto> getAllBooks() {
 		log.info("getAllBooks service impl called.");
 
@@ -77,19 +120,6 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public BookDto getBook(Long id) {
-		log.info("getBook service impl called.");
-
-		// Database called
-		BookEntity book = bookRepo.findById(id)
-				.orElseThrow(() -> new BookNotFoundException("BookEntity", "bookId", id));
-
-		// BookEntity to DTO conversion
-		BookDto response = BookEntity.getBookDto(book);
-		return response;
-	}
-
-	@Override
 	public DeleteResponse deleteBook(Long id) {
 		log.info("deleteBook service impl called.");
 
@@ -102,27 +132,4 @@ public class BookServiceImpl implements BookService {
 		return new DeleteResponse("Record of the book deleted successfully", true);
 	}
 
-	@Override
-	public BookDto updateBookDetailsPartially(Map<String, Object> updates, Long id) {
-		Optional<BookEntity> bookOptional = bookRepo.findById(id);
-
-		if (bookOptional.isPresent()) {
-			BookEntity book = bookOptional.get();
-			updates.forEach((key, value) -> {
-				switch (key) {
-				case "title":
-					book.setTitle((String) value);
-					break;
-				case "isbn":
-					book.setIsbn((String) value);
-					break;
-
-				}
-			});
-			BookEntity books = bookRepo.save(book);
-			return BookEntity.getBookDto(books);
-		} else {
-			throw new RuntimeException("Book not found with id " + id);
-		}
-	}
 }

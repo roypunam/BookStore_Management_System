@@ -23,9 +23,11 @@ public class AuthorServiceImpl implements AuthorService {
 
 	@Autowired
 	private AuthorRepository authorRepo;
+	
+	
 
 	@Override
-	public AuthorDto createAuthor(AuthorDto authorDto)  {
+	public AuthorDto createAuthor(AuthorDto authorDto) {
 		log.info("createAuthor service impl called.");
 
 		// DTO to AuthorEntity conversion
@@ -52,6 +54,45 @@ public class AuthorServiceImpl implements AuthorService {
 	}
 
 	@Override
+	public AuthorDto updateAuthorDetailsPartially(Map<String, Object> fields, Long id) {
+		log.info("updateAuthorDetailsPartially service impl called.");
+		//Database called
+		Optional<AuthorEntity> authorOptional = authorRepo.findById(id);
+
+		if (authorOptional.isPresent()) {
+			AuthorEntity author = authorOptional.get();
+			fields.forEach((key, value) -> {
+				switch (key) {
+				case "authorName":
+					author.setAuthorName((String) value);
+					break;
+				case "authorEmail":
+					author.setAuthorEmail((String) value);
+					break;
+
+				}
+			});
+			AuthorEntity getAuthor = authorRepo.save(author);
+			return AuthorEntity.getAuthorDto(getAuthor);
+		} else {
+			throw new RuntimeException("Author not found with id " + id);
+		}
+	}
+
+	@Override
+	public AuthorDto getAuthor(Long id) {
+		log.info("getAuthor service impl called.");
+
+		// Database called
+		AuthorEntity author = authorRepo.findById(id)
+				.orElseThrow(() -> new AuthorNotFoundException("AuthorEntity", "authorId", id));
+
+		// AuthorEntity to DTO conversion
+		AuthorDto response = AuthorEntity.getAuthorDto(author);
+		return response;
+	}
+
+	@Override
 	public List<AuthorDto> getAllAuthor() {
 		log.info("getAllAuthor service impl called.");
 
@@ -69,19 +110,6 @@ public class AuthorServiceImpl implements AuthorService {
 	}
 
 	@Override
-	public AuthorDto getAuthor(Long id) {
-		log.info("getAuthor service impl called.");
-
-		// Database called
-		AuthorEntity author = authorRepo.findById(id)
-				.orElseThrow(() -> new AuthorNotFoundException("AuthorEntity", "authorId", id));
-
-		// AuthorEntity to DTO conversion
-		AuthorDto response = AuthorEntity.getAuthorDto(author);
-		return response;
-	}
-
-	@Override
 	public DeleteResponse deleteAuthor(Long id) {
 		log.info("deleteAuthor service impl called.");
 
@@ -94,27 +122,4 @@ public class AuthorServiceImpl implements AuthorService {
 		return new DeleteResponse("Record of the author deleted successfully", true);
 	}
 
-	@Override
-	public AuthorDto updateAuthorDetailsPartially(Map<String, Object> updates, Long id) {
-		Optional<AuthorEntity> authorOptional = authorRepo.findById(id);
-
-		if (authorOptional.isPresent()) {
-			AuthorEntity author = authorOptional.get();
-			updates.forEach((key, value) -> {
-				switch (key) {
-				case "authorName":
-					author.setAuthorName((String) value);
-					break;
-				case "authorEmail":
-					author.setAuthorEmail((String) value);
-					break;
-
-				}
-			});
-			AuthorEntity getAuthor = authorRepo.save(author);
-			return AuthorEntity.getAuthorDto(getAuthor);
-		} else {
-			throw new RuntimeException("Author not found with id " + id);
-		}
-	}
 }

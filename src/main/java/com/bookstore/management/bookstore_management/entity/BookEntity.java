@@ -2,7 +2,6 @@ package com.bookstore.management.bookstore_management.entity;
 
 import com.bookstore.management.bookstore_management.dto.BookDto;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +39,7 @@ public class BookEntity {
 	@Column(name = "isbn")
 	String isbn;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
     @JoinColumn(name = "author_id")
     private AuthorEntity author;
 

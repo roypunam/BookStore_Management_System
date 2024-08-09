@@ -12,14 +12,16 @@ public interface BookService {
 	BookDto createNewBook(BookDto bookDto,Long authorId) throws RunTimeException;
 
 	BookDto updateBookDetails(BookDto bookDto, Long id);
-
-	List<BookDto> getAllBooks();
+	
+	BookDto updateBookDetailsPartially(Map<String, Object> fields, Long id);
 
 	BookDto getBook(Long id);
+	
+	List<BookDto> getAllBooks();
 
 	DeleteResponse deleteBook(Long id);
 
-	BookDto updateBookDetailsPartially(Map<String, Object> updates, Long id);
+	
 
 	
 

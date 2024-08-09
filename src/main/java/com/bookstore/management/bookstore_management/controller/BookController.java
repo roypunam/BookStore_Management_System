@@ -26,28 +26,44 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/books")
 @Slf4j
 public class BookController {
 
 	@Autowired
 	private BookService bookService;
 
-	@PostMapping("/create/new")
+	@PostMapping("")
 	public ResponseEntity<BookDto> createNewBook(@RequestBody @Valid BookDto bookDto,@RequestParam Long authorId) throws RunTimeException {
 		log.info("createNewBook API called.");
 		BookDto registeredBook = bookService.createNewBook(bookDto,authorId);
 		return new ResponseEntity<BookDto>(registeredBook, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<BookDto> updateBookDetails(@RequestBody @Valid BookDto bookDto, @PathVariable Long id) {
 		log.info("updateBookDetails API called.");
 		BookDto updatedBookDetails = bookService.updateBookDetails(bookDto, id);
 		return new ResponseEntity<BookDto>(updatedBookDetails, HttpStatus.OK);
 	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<BookDto> updateBookDetailsPartially(@RequestBody @Valid Map<String, Object> fields,
+			@PathVariable Long id) {
+		log.info("updateBookDetailsPartially API called.");
+		BookDto updatedBookDetails = bookService.updateBookDetailsPartially(fields, id);
+		return new ResponseEntity<BookDto>(updatedBookDetails, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<BookDto> getBook(@PathVariable Long id) {
+		log.info("getBook API called.");
+		BookDto getOneBook = bookService.getBook(id);
+		return new ResponseEntity<BookDto>(getOneBook, HttpStatus.OK);
+	}
+	
 
-	@GetMapping("/list/view")
+	@GetMapping("")
 	public ResponseEntity<List<BookDto>> getAllBooks() {
 		log.info("getAllBooks API called.");
 		List<BookDto> getBookList = bookService.getAllBooks();
@@ -55,26 +71,14 @@ public class BookController {
 
 	}
 
-	@GetMapping("/id/{id}")
-	public ResponseEntity<BookDto> getBook(@PathVariable Long id) {
-		log.info("getBook API called.");
-		BookDto getOneBook = bookService.getBook(id);
-		return new ResponseEntity<BookDto>(getOneBook, HttpStatus.OK);
-	}
 
-	@DeleteMapping("/delete/id/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<DeleteResponse> deleteBook(@PathVariable Long id) {
 		log.info("deleteBook API called.");
 		DeleteResponse deleteResponse = bookService.deleteBook(id);
 		return new ResponseEntity<DeleteResponse>(deleteResponse, HttpStatus.OK);
 	}
 
-	@PatchMapping("/update/partial/{id}")
-	public ResponseEntity<BookDto> updateBookDetailsPartially(@RequestBody @Valid Map<String, Object> updates,
-			@PathVariable Long id) {
-		log.info("updateBookDetailsPartially API called.");
-		BookDto updatedBookDetails = bookService.updateBookDetailsPartially(updates, id);
-		return new ResponseEntity<BookDto>(updatedBookDetails, HttpStatus.OK);
-	}
+	
 
 }

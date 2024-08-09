@@ -12,13 +12,15 @@ public interface AuthorService {
 	AuthorDto createAuthor(AuthorDto authorDto);
 
 	AuthorDto updateAuthorDetails(AuthorDto authorDto, Long id);
+	
+	AuthorDto updateAuthorDetailsPartially(Map<String, Object> fields, Long id);
+	
+	AuthorDto getAuthor(Long id);
 
 	List<AuthorDto> getAllAuthor();
 
-	AuthorDto getAuthor(Long id);
-
 	DeleteResponse deleteAuthor(Long id);
 
-	AuthorDto updateAuthorDetailsPartially(Map<String, Object> updates, Long id);
+	
 
 }
